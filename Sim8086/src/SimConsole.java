@@ -72,7 +72,7 @@ public class SimConsole {
 		new SimConsole();
 		while (true) {
 			clearScreen();
-			System.out.println("\t\t\t*********8086 Simulator v0.4a*************\n\n\n\n");
+			System.out.println("\t\t\t*********8086 Simulator v0.6b*************\n\n\n\n");
 			System.out.println("1. Execute an instruction\n2. Display All Registers and Flags\n3. Alter memory map\n4. Exit\n\n");
 			System.out.print("Enter your choice : ");
 			ch = sc.nextInt();
@@ -1304,9 +1304,455 @@ public class SimConsole {
 						continue;
 					}
 				} else if ("sub".equalsIgnoreCase(instn)) {
+					System.out.println("\nSelect the type of source : \n1. Memory Location\n2. Immediate Number\n3. General Register\n4. Segment Register");
+					System.out.print("\nEnter your choice : ");
+					ch = sc.nextInt();
+					if (ch == 1) {
+						System.out.println("\n\nSelect the type of destination : \n1. General Register\n2. Segment Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source address : ");
+							memIndex = sc.nextInt();
+							if (memIndex < 0 || memIndex > 1023) {
+								System.out.println("ERROR : Source memory location out of bounds! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							if (memMap[memIndex] == null) {
+								System.out.println("ERROR : Source location is empty! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("AL".equalsIgnoreCase(tempString)) {
+								AL = (byte)(AL - memMap[memIndex].memArray);
+							} else if ("AH".equalsIgnoreCase(tempString)) {
+								AH = (byte)(AH - memMap[memIndex].memArray);
+							} else if ("BL".equalsIgnoreCase(tempString)) {
+								BL = (byte)(BL - memMap[memIndex].memArray);
+							} else if ("BH".equalsIgnoreCase(tempString)) {
+								BH = (byte)(BH - memMap[memIndex].memArray);
+							} else if ("CL".equalsIgnoreCase(tempString)) {
+								CL = (byte)(CL - memMap[memIndex].memArray);
+							} else if ("CH".equalsIgnoreCase(tempString)) {
+								CH = (byte)(CH - memMap[memIndex].memArray);
+							} else if ("DL".equalsIgnoreCase(tempString)) {
+								DL = (byte)(DL - memMap[memIndex].memArray);
+							} else if ("DH".equalsIgnoreCase(tempString)) {
+								DH = (byte)(DH - memMap[memIndex].memArray);
+							} else {
+								System.out.println("ERROR : Invalid destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else if (ch == 2) {
+							System.out.print("\nEnter source address : ");
+							memIndex = sc.nextInt();
+							if (memIndex < 0 || memIndex > 1023) {
+								System.out.println("ERROR : Source memory location out of bounds! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							if (memMap[memIndex] == null) {
+								System.out.println("ERROR : Source location is empty! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("ES".equalsIgnoreCase(tempString)) {
+								ES = (short)(ES - memMap[memIndex].memArray);
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								DS = (short)(DS - memMap[memIndex].memArray);
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								SS = (short)(SS - memMap[memIndex].memArray);
+							} else {
+								System.out.println("ERROR : Invalid/Unsupported destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else if (ch == 2) {
+						System.out.println("\n\nSelect the type of destination : \n1. General Register\n2. Segment Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source value : ");
+							tempByte = sc.nextByte();
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("AL".equalsIgnoreCase(tempString)) {
+								AL = (byte)(AL - tempByte);
+							} else if ("AH".equalsIgnoreCase(tempString)) {
+								AH = (byte)(AH - tempByte);
+							} else if ("BL".equalsIgnoreCase(tempString)) {
+								BL = (byte)(BL - tempByte);
+							} else if ("BH".equalsIgnoreCase(tempString)) {
+								BH = (byte)(BH - tempByte);
+							} else if ("CL".equalsIgnoreCase(tempString)) {
+								CL = (byte)(CL - tempByte);
+							} else if ("CH".equalsIgnoreCase(tempString)) {
+								CH = (byte)(CH - tempByte);
+							} else if ("DL".equalsIgnoreCase(tempString)) {
+								DL = (byte)(DL - tempByte);
+							} else if ("DH".equalsIgnoreCase(tempString)) {
+								DH = (byte)(DH - tempByte);
+							} else {
+								System.out.println("ERROR : Invalid destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else if (ch == 2) {
+							System.out.print("\nEnter source value : ");
+							tempByte = sc.nextByte();
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("ES".equalsIgnoreCase(tempString)) {
+								ES = (short)(ES - tempByte);
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								DS = (short)(DS - tempByte);
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								SS = (short)(SS - tempByte);
+							} else {
+								System.out.println("ERROR : Invalid/Unsupported destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else if (ch == 3) {
+						System.out.println("\n\nSelect the type of destination : \n1. Segment Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source register : ");
+							tempString = sc.next();
+							if ("AL".equalsIgnoreCase(tempString)) {
+								tempByte = AL;
+							} else if ("AH".equalsIgnoreCase(tempString)) {
+								tempByte = AH;
+							} else if ("BL".equalsIgnoreCase(tempString)) {
+								tempByte = BL;
+							} else if ("BH".equalsIgnoreCase(tempString)) {
+								tempByte = BH;
+							} else if ("CL".equalsIgnoreCase(tempString)) {
+								tempByte = CL;
+							} else if ("CH".equalsIgnoreCase(tempString)) {
+								tempByte = CH;
+							} else if ("DL".equalsIgnoreCase(tempString)) {
+								tempByte = DL;
+							} else if ("DH".equalsIgnoreCase(tempString)) {
+								tempByte = DH;
+							} else {
+								System.out.println("ERROR : Invalid source register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("ES".equalsIgnoreCase(tempString)) {
+								ES = (short)(ES - tempByte);
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								DS = (short)(DS - tempByte);
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								SS = (short)(SS - tempByte);
+							} else {
+								System.out.println("ERROR : Invalid/Unsupported destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else if (ch == 4) {
+						System.out.println("\n\nSelect the type of destination : \n1. General Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source register : ");
+							tempString = sc.next();
+							if ("CS".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(CS & 0xff);
+								tempSeg[1] = (byte)((CS >> 8) & 0xff);
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(DS & 0xff);
+								tempSeg[1] = (byte)((DS >> 8) & 0xff);
+							} else if ("ES".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(ES & 0xff);
+								tempSeg[1] = (byte)((ES >> 8) & 0xff);
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(SS & 0xff);
+								tempSeg[1] = (byte)((SS >> 8) & 0xff);
+							} else {
+								System.out.println("ERROR : Invalid source register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register (AX,BX,CX,DX) : ");
+							tempString = sc.next();
+							if ("AX".equalsIgnoreCase(tempString)) {
+								AL = (byte)(AL - tempSeg[0]);
+								AH = (byte)(AH - tempSeg[1]);
+							} else if ("BX".equalsIgnoreCase(tempString)) {
+								BL = (byte)(BL - tempSeg[0]);
+								BH = (byte)(BH - tempSeg[1]);
+							} else if ("CX".equalsIgnoreCase(tempString)) {
+								CL = (byte)(CL - tempSeg[0]);
+								CH = (byte)(CH - tempSeg[1]);
+							} else if ("DX".equalsIgnoreCase(tempString)) {
+								DL = (byte)(DL - tempSeg[0]);
+								DH = (byte)(DH - tempSeg[1]);
+							} else {
+								System.out.println("ERROR : Invalid destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else {
+						System.out.println("Invalid source choice entered! Returning to main menu....");
+						sc.next();
+						continue;
 
-				} else if ("sbb".equalsIgnoreCase(instn)) {
-
+				}} else if ("sbb".equalsIgnoreCase(instn)) {
+					System.out.println("\nSelect the type of source : \n1. Memory Location\n2. Immediate Number\n3. General Register\n4. Segment Register");
+					System.out.print("\nEnter your choice : ");
+					ch = sc.nextInt();
+					if (ch == 1) {
+						System.out.println("\n\nSelect the type of destination : \n1. General Register\n2. Segment Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source address : ");
+							memIndex = sc.nextInt();
+							if (memIndex < 0 || memIndex > 1023) {
+								System.out.println("ERROR : Source memory location out of bounds! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							if (memMap[memIndex] == null) {
+								System.out.println("ERROR : Source location is empty! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("AL".equalsIgnoreCase(tempString)) {
+								AL = (byte)(AL - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("AH".equalsIgnoreCase(tempString)) {
+								AH = (byte)(AH - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("BL".equalsIgnoreCase(tempString)) {
+								BL = (byte)(BL - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("BH".equalsIgnoreCase(tempString)) {
+								BH = (byte)(BH - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("CL".equalsIgnoreCase(tempString)) {
+								CL = (byte)(CL - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("CH".equalsIgnoreCase(tempString)) {
+								CH = (byte)(CH - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("DL".equalsIgnoreCase(tempString)) {
+								DL = (byte)(DL - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("DH".equalsIgnoreCase(tempString)) {
+								DH = (byte)(DH - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else {
+								System.out.println("ERROR : Invalid destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else if (ch == 2) {
+							System.out.print("\nEnter source address : ");
+							memIndex = sc.nextInt();
+							if (memIndex < 0 || memIndex > 1023) {
+								System.out.println("ERROR : Source memory location out of bounds! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							if (memMap[memIndex] == null) {
+								System.out.println("ERROR : Source location is empty! Returning to main menu...");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("ES".equalsIgnoreCase(tempString)) {
+								ES = (short)(ES - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								DS = (short)(DS - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								SS = (short)(SS - memMap[memIndex].memArray - ( CF ? 1 : 0 ));
+							} else {
+								System.out.println("ERROR : Invalid/Unsupported destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else if (ch == 2) {
+						System.out.println("\n\nSelect the type of destination : \n1. General Register\n2. Segment Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source value : ");
+							tempByte = sc.nextByte();
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("AL".equalsIgnoreCase(tempString)) {
+								AL = (byte)(AL - tempByte - ( CF ? 1 : 0 ));
+							} else if ("AH".equalsIgnoreCase(tempString)) {
+								AH = (byte)(AH - tempByte - ( CF ? 1 : 0 ));
+							} else if ("BL".equalsIgnoreCase(tempString)) {
+								BL = (byte)(BL - tempByte - ( CF ? 1 : 0 ));
+							} else if ("BH".equalsIgnoreCase(tempString)) {
+								BH = (byte)(BH - tempByte - ( CF ? 1 : 0 ));
+							} else if ("CL".equalsIgnoreCase(tempString)) {
+								CL = (byte)(CL - tempByte - ( CF ? 1 : 0 ));
+							} else if ("CH".equalsIgnoreCase(tempString)) {
+								CH = (byte)(CH - tempByte - ( CF ? 1 : 0 ));
+							} else if ("DL".equalsIgnoreCase(tempString)) {
+								DL = (byte)(DL - tempByte - ( CF ? 1 : 0 ));
+							} else if ("DH".equalsIgnoreCase(tempString)) {
+								DH = (byte)(DH - tempByte - ( CF ? 1 : 0 ));
+							} else {
+								System.out.println("ERROR : Invalid destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else if (ch == 2) {
+							System.out.print("\nEnter source value : ");
+							tempByte = sc.nextByte();
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("ES".equalsIgnoreCase(tempString)) {
+								ES = (short)(ES - tempByte - ( CF ? 1 : 0 ));
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								DS = (short)(DS - tempByte - ( CF ? 1 : 0 ));
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								SS = (short)(SS - tempByte - ( CF ? 1 : 0 ));
+							} else {
+								System.out.println("ERROR : Invalid/Unsupported destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else if (ch == 3) {
+						System.out.println("\n\nSelect the type of destination : \n1. Segment Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source register : ");
+							tempString = sc.next();
+							if ("AL".equalsIgnoreCase(tempString)) {
+								tempByte = AL;
+							} else if ("AH".equalsIgnoreCase(tempString)) {
+								tempByte = AH;
+							} else if ("BL".equalsIgnoreCase(tempString)) {
+								tempByte = BL;
+							} else if ("BH".equalsIgnoreCase(tempString)) {
+								tempByte = BH;
+							} else if ("CL".equalsIgnoreCase(tempString)) {
+								tempByte = CL;
+							} else if ("CH".equalsIgnoreCase(tempString)) {
+								tempByte = CH;
+							} else if ("DL".equalsIgnoreCase(tempString)) {
+								tempByte = DL;
+							} else if ("DH".equalsIgnoreCase(tempString)) {
+								tempByte = DH;
+							} else {
+								System.out.println("ERROR : Invalid source register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register : ");
+							tempString = sc.next();
+							if ("ES".equalsIgnoreCase(tempString)) {
+								ES = (short)(ES - tempByte - ( CF ? 1 : 0 ));
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								DS = (short)(DS - tempByte - ( CF ? 1 : 0 ));
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								SS = (short)(SS - tempByte - ( CF ? 1 : 0 ));
+							} else {
+								System.out.println("ERROR : Invalid/Unsupported destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else if (ch == 4) {
+						System.out.println("\n\nSelect the type of destination : \n1. General Register");
+						System.out.print("\nEnter your choice : ");
+						ch = sc.nextInt();
+						if (ch == 1) {
+							System.out.print("\nEnter source register : ");
+							tempString = sc.next();
+							if ("CS".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(CS & 0xff);
+								tempSeg[1] = (byte)((CS >> 8) & 0xff);
+							} else if ("DS".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(DS & 0xff);
+								tempSeg[1] = (byte)((DS >> 8) & 0xff);
+							} else if ("ES".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(ES & 0xff);
+								tempSeg[1] = (byte)((ES >> 8) & 0xff);
+							} else if ("SS".equalsIgnoreCase(tempString)) {
+								tempSeg[0] = (byte)(SS & 0xff);
+								tempSeg[1] = (byte)((SS >> 8) & 0xff);
+							} else {
+								System.out.println("ERROR : Invalid source register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+							System.out.print("Enter destination register (AX,BX,CX,DX) : ");
+							tempString = sc.next();
+							if ("AX".equalsIgnoreCase(tempString)) {
+								AL = (byte)(AL - tempSeg[0] - ( CF ? 1 : 0 ));
+								AH = (byte)(AH - tempSeg[1]);
+							} else if ("BX".equalsIgnoreCase(tempString)) {
+								BL = (byte)(BL - tempSeg[0] - ( CF ? 1 : 0 ));
+								BH = (byte)(BH - tempSeg[1]);
+							} else if ("CX".equalsIgnoreCase(tempString)) {
+								CL = (byte)(CL - tempSeg[0] - ( CF ? 1 : 0 ));
+								CH = (byte)(CH - tempSeg[1]);
+							} else if ("DX".equalsIgnoreCase(tempString)) {
+								DL = (byte)(DL - tempSeg[0] - ( CF ? 1 : 0 ));
+								DH = (byte)(DH - tempSeg[1]);
+							} else {
+								System.out.println("ERROR : Invalid destination register entered! Returning to main menu....");
+								sc.next();
+								continue;
+							}
+						} else {
+							System.out.println("ERROR : Invalid destination choice entered! Returning to main menu....");
+							sc.next();
+							continue;
+						}
+					} else {
+						System.out.println("Invalid source choice entered! Returning to main menu....");
+						sc.next();
+						continue;
+					}
 				} else if ("inc".equalsIgnoreCase(instn)) {
 					String destn;
 					try {
@@ -1394,14 +1840,245 @@ public class SimConsole {
 						}
 					}
 				} else if ("mul".equalsIgnoreCase(instn)) {
+					String destn;
+					try {
+						destn = instnComplete.nextToken();
+					} catch (NoSuchElementException ex) {
+						System.out.println("ERROR : Invalid instruction syntax! Returning to main menu....");
+						sc.next();
+						continue;
+					}
+					if ("AL".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*AL) & 0xff);
+						tempSeg[1] = (byte)(((AL*AL) >> 8) & 0xff);
+						AL=(byte) Math.abs(tempSeg[0]);
+						AH=(byte) Math.abs(tempSeg[1]);
+					} else if("AX".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*AL) & 0xff);
+						tempSeg[1] = (byte)(((AL*AL) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+						tempSeg[0] = (byte)((AH*AH) & 0xff);
+						tempSeg[1] = (byte)(((AH*AH) >> 8) & 0xff);
+						DL=(byte)Math.abs(tempSeg[0]);
+						DH=(byte)Math.abs(tempSeg[1]);
+					}
+					else if ("BL".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*BL) & 0xff);
+						tempSeg[1] = (byte)(((AL*BL) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+					} else if ("BX".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*BL) & 0xff);
+						tempSeg[1] = (byte)(((AL*BL) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+						tempSeg[0] = (byte)((AH*BH) & 0xff);
+						tempSeg[1] = (byte)(((AH*BH) >> 8) & 0xff);
+						DL=(byte)Math.abs(tempSeg[0]);
+						DH=(byte)Math.abs(tempSeg[1]);
+					} else if ("CL".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*CL) & 0xff);
+						tempSeg[1] = (byte)(((AL*CL) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+					} else if("CX".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*CL) & 0xff);
+						tempSeg[1] = (byte)(((AL*CL) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+						tempSeg[0] = (byte)((AH*CH) & 0xff);
+						tempSeg[1] = (byte)(((AH*CH) >> 8) & 0xff);
+						DL=(byte)Math.abs(tempSeg[0]);
+						DH=(byte)Math.abs(tempSeg[1]);
+					} else if ("DL".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*DL) & 0xff);
+						tempSeg[1] = (byte)(((AL*DL) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+					} else if ("DX".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*DL) & 0xff);
+						tempSeg[1] = (byte)(((AL*DL) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+						tempSeg[0] = (byte)((AH*DH) & 0xff);
+						tempSeg[1] = (byte)(((AH*DH) >> 8) & 0xff);
+						DL=(byte)Math.abs(tempSeg[0]);
+						DH=(byte)Math.abs(tempSeg[1]);
+					} else if ("AH".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*AH) & 0xff);
+						tempSeg[1] = (byte)(((AL*AH) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+					} else if ("BH".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*BH) & 0xff);
+						tempSeg[1] = (byte)(((AL*BH) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+					} else if ("CH".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*CH) & 0xff);
+						tempSeg[1] = (byte)(((AL*CH) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+					} else if ("DH".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)((AL*DH) & 0xff);
+						tempSeg[1] = (byte)(((AL*DH) >> 8) & 0xff);
+						AL=(byte)Math.abs(tempSeg[0]);
+						AH=(byte)Math.abs(tempSeg[1]);
+					} else if ("CS".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)(CS & 0xff);
+						tempSeg[1] = (byte)((CS >> 8) & 0xff);
+						AL=(byte)Math.abs(((AL*tempSeg[0]) & 0xff));
+						AH=(byte)Math.abs((((AL*tempSeg[0]) >> 8) & 0xff));
+						DL=(byte)Math.abs(((AH*tempSeg[1]) & 0xff));
+						DH=(byte)Math.abs((((AH*tempSeg[1]) >> 8) & 0xff));
+					} else if ("ES".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)(ES & 0xff);
+						tempSeg[1] = (byte)((ES >> 8) & 0xff);
+						AL=(byte)Math.abs(((AL*tempSeg[0]) & 0xff));
+						AH=(byte)Math.abs((((AL*tempSeg[0]) >> 8) & 0xff));
+						DL=(byte)Math.abs(((AH*tempSeg[1]) & 0xff));
+						DH=(byte)Math.abs((((AH*tempSeg[1]) >> 8) & 0xff));
+					} else if ("DS".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)(DS & 0xff);
+						tempSeg[1] = (byte)((DS >> 8) & 0xff);
+						AL=(byte)Math.abs(((AL*tempSeg[0]) & 0xff));
+						AH=(byte)Math.abs((((AL*tempSeg[0]) >> 8) & 0xff));
+						DL=(byte)Math.abs(((AH*tempSeg[1]) & 0xff));
+						DH=(byte)Math.abs((((AH*tempSeg[1]) >> 8) & 0xff));
+					} else if ("SS".equalsIgnoreCase(destn)) {
+						tempSeg[0] = (byte)(SS & 0xff);
+						tempSeg[1] = (byte)((SS >> 8) & 0xff);
+						AL=(byte)Math.abs(((AL*tempSeg[0]) & 0xff));
+						AH=(byte)Math.abs((((AL*tempSeg[0]) >> 8) & 0xff));
+						DL=(byte)Math.abs(((AH*tempSeg[1]) & 0xff));
+						DH=(byte)Math.abs((((AH*tempSeg[1]) >> 8) & 0xff));
+					} else {
+						try {
+							memIndex = Integer.parseInt(destn);
+							tempSeg[0] = (byte)Math.abs(((AL*memMap[memIndex].memArray) & 0xff));
+							tempSeg[1] = (byte)Math.abs((((AL*memMap[memIndex].memArray) >> 8) & 0xff));
+							AL=tempSeg[0];
+							AH=tempSeg[1];
+						} catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException ex) {
+							System.out.println("ERROR : An error occured while trying to execute this instruction. Returning to main menu...");
+							sc.next();
+							continue;
+						}
+				}
 
 				} else if ("cmp".equalsIgnoreCase(instn)) {
 
 				} else if ("neg".equalsIgnoreCase(instn)) {
-
+					String destn;
+					try {
+						destn = instnComplete.nextToken();
+					} catch (NoSuchElementException ex) {
+						System.out.println("ERROR : Invalid instruction syntax! Returning to main menu....");
+						sc.next();
+						continue;
+					}
+					if ("AL".equalsIgnoreCase(destn)) {
+						AL*=-1;
+					}else if("AX".equalsIgnoreCase(destn)){
+						AL*=-1;
+						AH*=-1;
+					} else if ("BL".equalsIgnoreCase(destn)) {
+						BL*=-1;
+					}else if("BX".equalsIgnoreCase(destn)){
+						BL*=-1;
+						BH*=-1;
+					} else if ("CL".equalsIgnoreCase(destn)) {
+						CL*=-1;
+					}else if("CX".equalsIgnoreCase(destn)){
+						CL*=-1;
+						CH*=-1;
+					} else if ("DL".equalsIgnoreCase(destn)) {
+						DL*=-1;
+					}else if("DX".equalsIgnoreCase(destn)){
+						DL*=-1;
+						DH*=-1;
+					} else if ("AH".equalsIgnoreCase(destn)) {
+						AH*=-1;
+					} else if ("BH".equalsIgnoreCase(destn)) {
+						BH*=-1;
+					} else if ("CH".equalsIgnoreCase(destn)) {
+						CH*=-1;
+					} else if ("DH".equalsIgnoreCase(destn)) {
+						DH*=-1;
+					} else if ("CS".equalsIgnoreCase(destn)) {
+						CS*=-1;
+					} else if ("ES".equalsIgnoreCase(destn)) {
+						ES*=-1;
+					} else if ("DS".equalsIgnoreCase(destn)) {
+						DS*=-1;
+					} else if ("SS".equalsIgnoreCase(destn)) {
+						SS*=-1;
+					} else {
+						try {
+							memIndex = Integer.parseInt(destn);
+							memMap[memIndex].memArray*=-1;
+						} catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException ex) {
+							System.out.println("ERROR : An error occured while trying to execute this instruction. Returning to main menu...");
+							sc.next();
+							continue;
+						}
+					}
 				} else if ("not".equalsIgnoreCase(instn)) {
-
-				} else if ("and".equalsIgnoreCase(instn)) {
+					String destn;
+					try {
+						destn = instnComplete.nextToken();
+					} catch (NoSuchElementException ex) {
+						System.out.println("ERROR : Invalid instruction syntax! Returning to main menu....");
+						sc.next();
+						continue;
+					}
+					if ("AL".equalsIgnoreCase(destn)) {
+						AL=(byte) ~AL;
+					} else if("AX".equalsIgnoreCase(destn)){
+						AL=(byte) ~AL;
+						AH=(byte) ~AH;
+					}else if ("BL".equalsIgnoreCase(destn)) {
+						BL=(byte) ~BL;
+					}else if("BX".equalsIgnoreCase(destn)){
+						BL=(byte) ~BL;
+						BH=(byte) ~BH;
+					} else if ("CL".equalsIgnoreCase(destn)) {
+						CL=(byte) ~CL;
+					}else if("CX".equalsIgnoreCase(destn)){
+						CL=(byte) ~CL;
+						CH=(byte) ~CH;
+					} else if ("DL".equalsIgnoreCase(destn)) {
+						DL=(byte) ~DL;
+					}else if("DX".equalsIgnoreCase(destn)){
+						DL=(byte) ~DL;
+						DH=(byte) ~DH;
+					} else if ("AH".equalsIgnoreCase(destn)) {
+						AH=(byte) ~AH;
+					} else if ("BH".equalsIgnoreCase(destn)) {
+						BH=(byte) ~BH;
+					} else if ("CH".equalsIgnoreCase(destn)) {
+						CH=(byte) ~CH;
+					} else if ("DH".equalsIgnoreCase(destn)) {
+						DH=(byte) ~DH;
+					} else if ("CS".equalsIgnoreCase(destn)) {
+						CS=(short) ~CS;
+					} else if ("ES".equalsIgnoreCase(destn)) {
+						ES=(short) ~ES;
+					} else if ("DS".equalsIgnoreCase(destn)) {
+						DS=(short) ~DS;
+					} else if ("SS".equalsIgnoreCase(destn)) {
+						SS=(short) ~SS;
+					} else {
+						try {
+							memIndex = Integer.parseInt(destn);
+							memMap[memIndex].memArray=(byte) ~(memMap[memIndex].memArray);
+						} catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException ex) {
+							System.out.println("ERROR : An error occured while trying to execute this instruction. Returning to main menu...");
+							sc.next();
+							continue;
+						}
+				}} else if ("and".equalsIgnoreCase(instn)) {
 					System.out.println("\nSelect the type of source : \n1. Memory Location\n2. Immediate Number\n3. General Register\n4. Segment Register");
 					System.out.print("\nEnter your choice : ");
 					ch = sc.nextInt();
@@ -1852,7 +2529,9 @@ public class SimConsole {
 						continue;
 					}
 				} else if ("test".equalsIgnoreCase(instn)) {
-
+					System.out.println("\nTEST opcode was invoked.\n");
+					sc.next();
+					continue;
 				} else if ("shl".equalsIgnoreCase(instn) || "sal".equalsIgnoreCase(instn)) {
 
 				} else if ("shr".equalsIgnoreCase(instn)) {
@@ -2013,7 +2692,22 @@ public class SimConsole {
 					}
 				} else if ("stc".equalsIgnoreCase(instn)) {
 					CF = true;
-				} else {
+				} else if ("clc".equalsIgnoreCase(instn)) {
+					CF = false;
+				} else if ("cmc".equalsIgnoreCase(instn)) {
+					if(CF = true)
+						CF = false;
+					else
+						CF = true;
+				} else if ("std".equalsIgnoreCase(instn)) {
+					DF = true;
+				} else if ("cld".equalsIgnoreCase(instn)) {
+					DF = false;
+				} else if ("sti".equalsIgnoreCase(instn)) {
+					IF = true;
+				} else if ("cli".equalsIgnoreCase(instn)) {
+					IF = false;
+				}else {
 					System.out.println("ERROR : Invalid instruction entered! Returning to main menu....");
 					sc.next();
 				}
